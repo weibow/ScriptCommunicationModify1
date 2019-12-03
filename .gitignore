@@ -1,0 +1,45 @@
+### C++ objects and libs
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+
+### Qt-es
+/.qmake.cache
+/.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+Makefile*
+*build-*
+
+### QtCreator
+*.autosave
+
+### QtCtreator Qml
+*.qmlproject.user
+*.qmlproject.user.*
+
+### QtCtreator CMake
+CMakeLists.txt.user
+ScriptCommunicator/exampleScripts/WorkerScripts/Gui/testFileFromGuiExample.txt
+ScriptCommunicator/ScriptEditor/test/test.js
+ScriptCommunicator/exampleScripts/WorkerScripts/TestAardvardI2cSpi/aardvardI2cSpi_settings.txt
+ScriptCommunicator/exampleScripts/WorkerScripts/TestAardvarkI2cSpi/aardvarkI2cSpi_mainInf_settings.txt
+ScriptCommunicator/exampleScripts/WorkerScripts/TestAardvarkI2cSpi/aardvarkI2cSpi_sepInf_settings.txt
+ScriptCommunicator/exampleScripts/WorkerScripts/TestXml/testWrite.xml
+ScriptCommunicator/exampleScripts/WorkerScripts/PlotWindow/exampleSceFileConfig.xml
+ScriptCommunicator/exampleScripts/WorkerScripts/TestSql/test.db3
+ScriptCommunicator/exampleScripts/WorkerScripts/AdditionalInterface/Serial/uiSettings_Serial_1.txt
+ScriptCommunicator/exampleScripts/WorkerScripts/AdditionalInterface/TCP_Client/uiSettings_TCP_1.txt
+ScriptCommunicator/exampleScripts/WorkerScripts/AdditionalInterface/UDP/uiSettings_UDP_1.txt
