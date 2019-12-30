@@ -115,7 +115,8 @@ SOURCES += \
     scriptClasses/scriptConverter.cpp \
     aardvarkI2cSpi/aardvark.c \
     aardvarkI2cSpi/aardvarkI2cSpi.cpp \
-    scriptClasses/scriptInf.cpp
+    scriptClasses/scriptInf.cpp \
+    scriptClasses/gb23122utf8.cpp
 
 HEADERS += \
     mainwindow.h \

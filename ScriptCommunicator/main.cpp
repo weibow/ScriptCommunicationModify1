@@ -1,3 +1,4 @@
+
 /***************************************************************************
 **                                                                        **
 **  ScriptCommunicator, is a tool for sending/receiving data with several **
@@ -23,7 +24,6 @@
 ****************************************************************************/
 
 #include <QApplication>
-
 #include "mainwindow.h"
 #include <QStringList>
 #include <scriptFile.h>
@@ -33,11 +33,11 @@
 #include <QProcess>
 #include <QStandardPaths>
 #include <QTextCodec>
-
-
+#include <QStack>
+#include <QQueue>
 #include <iostream>
-using namespace  std;
 
+using namespace  std;
 
 #ifdef Q_OS_WIN32
 #include <Windows.h>
@@ -76,7 +76,6 @@ void deleteCurrentScezFolder(void)
     }
 }
 
-
 void GetMemory(char *p, int num)
 {
     p =(char*)malloc(sizeof(char) *num);
@@ -104,6 +103,201 @@ void test(void)
     cout << "p pointer address" << &p << endl;
     cout << "*ptr value" << *ptr ;
     cout << "ptr address" << ptr << endl;
+    QStack <int> stack;
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+
+    while(!stack.isEmpty()) {
+        cout << stack.pop() << endl;
+    }
+
+    QQueue <int> queue;
+    queue.enqueue(1);
+    queue.enqueue(2);
+    queue.enqueue(3);
+    while (!queue.isEmpty())
+    {
+        cout << queue.dequeue() << endl;
+    }
+
+    bool ok;
+    double d;
+    QLocale::setDefault(QLocale::C);
+
+    d = QString("1234.56").toDouble(&ok);
+    if (ok) qDebug("TRUE");
+    else qDebug("FALSE");
+
+    QLatin1String latin("Qt");
+    QString str = QString("Qt");
+
+    if (str == latin)
+        qDebug("Equal.2");
+    else
+        qDebug("Not equal.");
+
+    bool is_equal = latin.operator ==(str);
+
+    if (is_equal)
+        qDebug("Equal");
+    else
+        qDebug("Not Equal");
+
+//    QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));    //设置本地编码对象
+//        //啊的gbk编码: 0xB0A1            啊的utf8编码:0xE5958A
+//        //哈的gbk编码: 0xB9FE            哈的utf8编码:0xE59388
+//
+//        QString str1="啊哈";               //对应编码为:  0xB0A1  0xB9FE
+//
+//        QTextCodec *gbk = QTextCodec::codecForName("gbk");
+//
+//        QString unicode=gbk->toUnicode(str1.toLocal8Bit());    //通过gbk编码对象将啊哈转为utf-16
+//
+//
+//        QTextCodec *utf8 = QTextCodec::codecForName("UTF-8");
+//
+//        QByteArray arr=utf8->fromUnicode(unicode);           //从Unicode编码转为自身编码类型(utf-8)
+//
+//        qDebug()<<arr.size();
+//        for(int i=0; i <arr.size();i++)
+//        {
+//            qDebug("%x",(unsigned char)arr[i]);
+//        }
+//
+
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));    //设置本地编码对象
+//utf8向gdk转换的过程是utf8->unicode, unicode->gdk
+//在PC，Unicode一般代表utf-16,而utf-8是单独列出来的
+//啊的gbk编码: 0xB0A1            啊的utf8编码:0xE5958A
+//哈的gbk编码: 0xB9FE            哈的utf8编码:0xE59388
+
+    unsigned char encode[6]={0xe5,0x95,0x8A,0xE5,0x93,0x88};             	//啊哈 utf-8编码
+    QTextCodec *utf8 = QTextCodec::codecForName("UTF-8");       			//获取UTF-8编码对象
+    QString unicode = utf8->toUnicode((const char*)encode,6);               //通过UTF-8编码对象将啊哈转为utf-16
+
+    QTextCodec *gbk = QTextCodec::codecForName("GBK");          //获取GBK编码对象
+    QByteArray arr=gbk->fromUnicode(unicode);                   //从Unicode编码转为自身编码类型(GBK)i
+    qDebug() << gbk;
+    qDebug() << QString::fromLocal8Bit(arr);                     //打印GBK码
+
+    qDebug() << arr.size();
+    for(int i=0; i <arr.size();i++)
+    {
+        qDebug("%x",(unsigned char)arr[i]);
+    }
+}
+
+
+void displayGBKFile()
+{
+    QFile file("main.c");
+    file.open(QFile::ReadOnly | QFile::Text);
+
+    QTextCodec *gbk = QTextCodec::codecForName("GBK");
+    QTextCodec *utf8 = QTextCodec::codecForName("UTF-8");
+
+    QString content = gbk->toUnicode(file.readAll());
+
+    qDebug()<<"Display GBK.txt file\n" << content;
+    file.close();
+    char buffer[2048];
+    qDebug() << "start read\n";
+    if (file.open(QIODevice::ReadOnly)){
+        qint64 lineLen = file.readLine(buffer, sizeof(buffer));
+        if (lineLen != -1)
+        {
+        qDebug() << buffer;
+        }
+        file.close();
+    }
+    QFile data("data.c");
+    if (data.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        QTextStream out(&data);
+        out.setCodec("utf-8");
+        out << utf8->fromUnicode(content);
+        qDebug() << utf8;
+    }
+    qDebug() << "\nhello\n";
+    QFile file2("main.c");
+    if (file2.open(QIODevice::ReadWrite | QIODevice::Text))
+    {
+        qDebug() << "dde\n";;
+        QTextStream stream(&file2);
+        const QString &text = stream.readAll();
+        stream.seek(0);
+        stream.setCodec(QTextCodec::codecForName("utf-8"));
+        stream.setGenerateByteOrderMark(true);
+        stream << text;
+        stream.seek(0);
+    } else {
+
+    }
+}
+
+void GBK2utf8_convert(QString filename)
+{
+   QFile file(filename);
+
+   qDebug() << filename;
+   if (file.open(QIODevice::ReadWrite | QIODevice::Text))
+   {
+       QTextStream stream(&file);
+       const QString &text = stream.readAll();
+       stream.seek(0);
+       stream.setCodec(QTextCodec::codecForName("utf-8"));
+       stream.setGenerateByteOrderMark(true); //Add the BOM(Byte Order Mark)
+       stream << text;
+       file.close();
+   }
+}
+
+
+void displayUTF8File()
+{
+    QFile file("main.c");
+    file.open(QFile::ReadOnly | QFile::Text);
+    QTextCodec *codec = QTextCodec::codecForName("UTF8");
+    QString content = codec->toUnicode(file.readAll());
+    qDebug()<<"Display UTF8.txt File:" << content;
+}
+
+
+void gbkutf(void)
+{
+    displayGBKFile();
+  //  displayUTF8File();
+}
+
+/*
+ * file name display
+ */
+qint64 du(const QString &path)
+{
+    QDir dir(path);
+    QString pathname;
+    qint64 size = 0;
+    QStringList string;
+    string << "*.c" << "*.h";
+
+    foreach (QFileInfo fileInfo, dir.entryInfoList(string, QDir::Files, QDir::Name)) {
+        size += fileInfo.size();
+        if (pathname != dir.absolutePath()){
+          //  qDebug() << dir.absolutePath();
+            pathname = dir.absolutePath();
+        }
+        //qDebug() << fileInfo.fileName();
+//        pathname = pathname + fileInfo.fileName();
+        pathname = fileInfo.absoluteFilePath();
+        GBK2utf8_convert(pathname);
+    }
+
+    foreach (QString subDir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        size += du(path + QDir::separator() + subDir);
+        qDebug() << path + QDir::separator() + subDir;
+    }
+    return size;
 }
 
 int main(int argc, char *argv[])
@@ -120,8 +314,19 @@ int main(int argc, char *argv[])
     bool scriptWindowIsMinimized = true;
     QString minimumScVersion;
     QString iconFile;
+    QString ("hello%1%2").arg("ni hao ").arg("jos").arg("33");
 
-    test();
+//    test();
+//    gbkutf();
+    QString path = QDir::currentPath();
+//    path = path + "/Scale_Machines";
+    path = "./Scale_Machines";
+
+    qDebug() << path;
+    qDebug() << du(path);
+//    qDebug() << QDir::currentPath();
+//    qDebug() << (QDir::currentPath() + "/Scale_Machines");
+//    qDebug() << du(QDir::currentPath() + "/Scale_Machines");
 
 #ifdef Q_OS_WIN32
     qInstallMessageHandler(messageHandler);
