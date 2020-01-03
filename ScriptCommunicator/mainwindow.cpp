@@ -342,8 +342,6 @@ MainWindow::MainWindow(QStringList scripts, bool withScriptWindow, bool scriptWi
     m_userInterface->pauseWorkerScriptPushButton->setText("debug");
     m_userInterface->startWorkerScriptsPushButton->setText("start");
 
-
-
     QStringList availTargets;
     availTargets << "ascii" << "hex" << "bin" << "uint8" << "uint16" << "uint32" << "int8" << "int16" << "int32";
     m_userInterface->SendFormatComboBox->addItems(availTargets);
@@ -361,7 +359,6 @@ MainWindow::MainWindow(QStringList scripts, bool withScriptWindow, bool scriptWi
     m_userInterface->ReceiveTextEditHex->setMainWindow(this);
     m_userInterface->ReceiveTextEditMixed->setMainWindow(this);
     m_userInterface->ReceiveTextEditMixed->setIsMixedConsole(true);
-
 
     m_settingsDialog = new SettingsDialog(m_userInterface->actionLockScrolling);
     m_sendWindow = new SendWindow(m_settingsDialog, this);
@@ -384,17 +381,14 @@ MainWindow::MainWindow(QStringList scripts, bool withScriptWindow, bool scriptWi
 
     m_userInterface->statusBar->addPermanentWidget(&m_statusBarLabel, 1);
 
-
     m_userInterface->actionQuit->setEnabled(true);
     m_userInterface->actionConfigure->setEnabled(true);
 
     initActionsConnections();
 
-
     m_userInterface->ReceiveLable->setText("0 bytes received");
 
     m_userInterface->ReceiveTextEditAscii->setFocus();
-
 
     qRegisterMetaType< QVector<QByteArray>>("QVector<QByteArray>");
 
@@ -410,7 +404,6 @@ MainWindow::MainWindow(QStringList scripts, bool withScriptWindow, bool scriptWi
 
     connect(m_sendWindow, SIGNAL(sendDataWithTheMainInterfaceSignal(QByteArray,uint)), m_mainInterface, SLOT(sendDataSlot(QByteArray, uint)), Qt::QueuedConnection);
     connect(m_handleData, SIGNAL(sendDataWithTheMainInterfaceSignal(QByteArray,uint)), m_mainInterface, SLOT(sendDataSlot(QByteArray, uint)), Qt::QueuedConnection);
-
 
     connect(m_sendWindow, SIGNAL(configHasToBeSavedSignal()),this, SLOT(configHasToBeSavedSlot()));
 
@@ -529,7 +522,6 @@ MainWindow::MainWindow(QStringList scripts, bool withScriptWindow, bool scriptWi
             QString tmp = list.at(i);
             qDebug() << tmp;
         }
-
 
         if(configFile.isEmpty())
         {
@@ -661,8 +653,6 @@ MainWindow::MainWindow(QStringList scripts, bool withScriptWindow, bool scriptWi
 
         m_userInterface->workerScriptListWidget->installEventFilter(this);
         m_userInterface->sequenceListWidget->installEventFilter(this);
-
-
 
     }//if(m_commandLineScripts.isEmpty())
     else
@@ -4161,7 +4151,6 @@ QString MainWindow::convertToAbsolutePath(QString rootFile, QString fileName)
 QStringList MainWindow::readMainConfigFileList(bool removeDefaultMarker)
 {
     QStringList result;
-
 
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);

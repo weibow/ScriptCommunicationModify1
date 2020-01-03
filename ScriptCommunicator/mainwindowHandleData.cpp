@@ -154,7 +154,6 @@ void MainWindowHandleData::appendDataToStoredData(QByteArray &data, bool isSend,
                 {
                     m_unprocessedConsoleData.first().data.remove(0, m_bytesInUnprocessedConsoleData - currentSettings->maxCharsInConsole);
                     m_bytesInUnprocessedConsoleData -= m_bytesInUnprocessedConsoleData - currentSettings->maxCharsInConsole;
-
                 }
             }
 
@@ -1347,6 +1346,8 @@ void MainWindowHandleData::appendUnprocessConsoleData(QByteArray &data, bool isS
                     //Append a new line.
                     appendNewLine(&m_unprocessedConsoleData, isSend, isFromCan, isFromI2cMaster);
                     m_bytesInUnprocessedConsoleData += m_unprocessedConsoleData.last().data.length();
+//                    appendNewLine(&m_unprocessedConsoleData, isSend, isFromCan, isFromI2cMaster);
+//                    m_bytesInUnprocessedConsoleData += m_unprocessedConsoleData.last().data.length();
                 }
 
             }

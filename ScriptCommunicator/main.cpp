@@ -1,4 +1,3 @@
-
 /***************************************************************************
 **                                                                        **
 **  ScriptCommunicator, is a tool for sending/receiving data with several **
@@ -164,7 +163,6 @@ void test(void)
 //        {
 //            qDebug("%x",(unsigned char)arr[i]);
 //        }
-//
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));    //设置本地编码对象
 //utf8向gdk转换的过程是utf8->unicode, unicode->gdk
@@ -232,7 +230,6 @@ void displayGBKFile()
         stream << text;
         stream.seek(0);
     } else {
-
     }
 }
 
@@ -287,7 +284,8 @@ qint64 du(const QString &path)
           //  qDebug() << dir.absolutePath();
             pathname = dir.absolutePath();
         }
-        //qDebug() << fileInfo.fileName();
+        qDebug() << "see" << fileInfo.fileName();
+//        qDebug() << fileInfo.absoluteFilePath();
 //        pathname = pathname + fileInfo.fileName();
         pathname = fileInfo.absoluteFilePath();
         GBK2utf8_convert(pathname);
@@ -295,7 +293,7 @@ qint64 du(const QString &path)
 
     foreach (QString subDir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         size += du(path + QDir::separator() + subDir);
-        qDebug() << path + QDir::separator() + subDir;
+        qDebug() <<"I'm" << path + QDir::separator() + subDir;
     }
     return size;
 }
@@ -316,6 +314,12 @@ int main(int argc, char *argv[])
     QString iconFile;
     QString ("hello%1%2").arg("ni hao ").arg("jos").arg("33");
 
+    QFile data("data.txt");
+    if (data.open(QFile::WriteOnly|QFile::Truncate))
+    {
+        QTextStream out(&data);
+        out << uppercasedigits <<"de" << QObject::tr("score") <<qSetFieldWidth(10) << center << 90 << endl;
+    }
 //    test();
 //    gbkutf();
     QString path = QDir::currentPath();
@@ -353,22 +357,18 @@ int main(int argc, char *argv[])
             }
             else if(currentArg.startsWith("-P"))
             {//Extra plugin path.
-
                 extraPluginPaths << currentArg.remove("-P");
             }
             else if(currentArg.startsWith("-L"))
             {//Extra library path.
-
                 extraLibPaths << currentArg.remove("-L");
             }
             else if(currentArg.startsWith("-C"))
             {//Config file.
-
                 configFile = currentArg.remove("-C");
             }
             else if(currentArg.startsWith("-A"))
             {//Script argument (script can read these arguments withScriptThread::getScriptArguments).
-
                 scriptArguments << currentArg.remove("-A");
             }
             else if(currentArg.startsWith("-minScVersion"))
@@ -445,7 +445,6 @@ int main(int argc, char *argv[])
                 {
                     return -1;
                 }
-
             }
             else
             {
